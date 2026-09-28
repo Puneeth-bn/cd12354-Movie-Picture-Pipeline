@@ -13,3 +13,13 @@ build/
 eks-describe.json
 smoke-source.json
 codebuild-trust.json
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+*.env
