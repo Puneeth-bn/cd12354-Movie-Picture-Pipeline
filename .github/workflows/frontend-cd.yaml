@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'starter/frontend/**'
   workflow_dispatch:
 
 jobs:
   lint:
+    name: Frontend Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: 'starter/frontend/.nvmrc'
           cache: npm
           cache-dependency-path: starter/frontend/package-lock.json
 
@@ -30,6 +33,7 @@ jobs:
         run: npm run lint
 
   test:
+    name: Frontend Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +43,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: 'starter/frontend/.nvmrc'
           cache: npm
           cache-dependency-path: starter/frontend/package-lock.json
 
@@ -49,9 +53,10 @@ jobs:
 
       - name: Run tests
         working-directory: starter/frontend
-        run: npm test -- --watchAll=false
+        run: CI=true npm test
 
   build:
+    name: Frontend Build
     runs-on: ubuntu-latest
     needs: [lint, test]
 
@@ -83,7 +88,14 @@ jobs:
           docker push \
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }}
 
+      - name: Build Summary
+        run: |
+          echo "## Frontend CD Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Image**: \`${{ steps.login-ecr.outputs.registry }}/${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image Tag**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+
   deploy:
+    name: Frontend Deployment
     runs-on: ubuntu-latest
     needs: build
 
@@ -122,3 +134,9 @@ jobs:
       - name: Wait for deployment
         run: |
           kubectl rollout status deployment/frontend
+
+      - name: Get service URLs
+        run: |
+          echo "## Frontend Deployment Complete" >> $GITHUB_STEP_SUMMARY
+          echo "### Service URLs" >> $GITHUB_STEP_SUMMARY
+          kubectl get svc -n default -o wide >> $GITHUB_STEP_SUMMARY
