@@ -90,7 +90,7 @@ jobs:
 
       - name: Build Summary
         run: |
-          echo "## Frontend CD Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "## Frontend Build Complete ✅" >> $GITHUB_STEP_SUMMARY
           echo "- **Docker Image**: \`${{ steps.login-ecr.outputs.registry }}/${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Image Tag**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
 
@@ -98,6 +98,9 @@ jobs:
     name: Frontend Deployment
     runs-on: ubuntu-latest
     needs: build
+    concurrency:
+      group: frontend-deployment
+      cancel-in-progress: false
 
     steps:
       - name: Checkout code
@@ -133,10 +136,18 @@ jobs:
 
       - name: Wait for deployment
         run: |
-          kubectl rollout status deployment/frontend
+          kubectl rollout status deployment/frontend --timeout=5m
 
-      - name: Get service URLs
+      - name: Get service information
         run: |
-          echo "## Frontend Deployment Complete" >> $GITHUB_STEP_SUMMARY
+          echo "## Frontend Deployment Complete ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Service URLs" >> $GITHUB_STEP_SUMMARY
-          kubectl get svc -n default -o wide >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          kubectl get svc frontend -o wide >> $GITHUB_STEP_SUMMARY 2>&1 || echo "Frontend service details"
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployment Status" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          kubectl get deployment frontend -o wide >> $GITHUB_STEP_SUMMARY 2>&1 || echo "Frontend deployment details"
+          echo '```' >> $GITHUB_STEP_SUMMARY
