@@ -90,3 +90,13 @@ jobs:
           docker build \
             --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 \
             -t frontend:${{ github.sha }} .
+
+      - name: Test Docker image
+        run: docker image inspect frontend:${{ github.sha }}
+
+      - name: Job Summary
+        run: |
+          echo "## Frontend CI Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "- **Lint**: ✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tests**: ✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Image Tag**: \`frontend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
