@@ -7,7 +7,7 @@ metadata:
     app: backend
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-    service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-08e47ed916e74ebc0,subnet-08f9a240719c15b61,subnet-09367c4a60a4155cb
+    service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-08e47ed916e74ebc0,subnet-08f9a240719c15b61,subnet-09367c4a60a4155cb,subnet-081cec7d0ec9b7936
 spec:
   type: LoadBalancer
   loadBalancerClass: eks.amazonaws.com/nlb
