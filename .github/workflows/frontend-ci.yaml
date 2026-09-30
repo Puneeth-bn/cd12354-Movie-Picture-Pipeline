@@ -96,9 +96,10 @@ jobs:
 
       - name: Job Summary
         run: |
-          echo "## Frontend CI Build Complete" >> $GITHUB_STEP_SUMMARY
-          echo "- **Lint**: ✅ Passed" >> $GITHUB_STEP_SUMMARY
-          echo "- **Tests**: ✅ Passed" >> $GITHUB_STEP_SUMMARY
-          echo "- **Docker Build**: ✅ Passed" >> $GITHUB_STEP_SUMMARY
-          echo "- **Docker Image Tag**: \`frontend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY**: ✅ Passed" >> $GITHUB_STEP_SUMMARY
-          echo "- **Docker Image Tag**: \`frontend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "## Frontend CI Build Complete" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- Lint: Passed" >> $GITHUB_STEP_SUMMARY
+            echo "- Tests: Passed" >> $GITHUB_STEP_SUMMARY
+            echo "- Application Build: Passed" >> $GITHUB_STEP_SUMMARY
+            echo "- Docker Build: Passed" >> $GITHUB_STEP_SUMMARY
+            echo "- Docker Test: Passed" >> $GITHUB_STEP_SUMMARY
