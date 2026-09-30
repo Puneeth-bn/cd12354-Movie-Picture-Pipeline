@@ -406,6 +406,13 @@ kustomize edit set image backend=<ECR_REPO_URL>:<NEW_TAG_HERE>
 # Apply the manifests to the cluster
 kustomize build | kubectl apply -f -
 ```
+## Deployed Application
+
+### Frontend
+[Movie Picture Pipeline - Frontend](http://k8s-default-frontend-d20a8ec49c-6592ad94e623980d.elb.us-east-1.amazonaws.com)
+
+### Backend API
+[Movie Picture Pipeline - Backend API](http://k8s-default-backend-ef36d6628c-d7254bc5c08ba693.elb.us-east-1.amazonaws.com/movies)
 
 ## License
 
