@@ -5,7 +5,8 @@ metadata:
   labels:
     app: backend
 spec:
-  type: NodePort
+  type: LoadBalancer
+  loadBalancerClass: eks.amazonaws.com/nlb
   selector:
     app: backend
   ports:
