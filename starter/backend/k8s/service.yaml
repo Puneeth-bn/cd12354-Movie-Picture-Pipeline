@@ -2,8 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend
+  namespace: default
   labels:
     app: backend
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-08e47ed916e74ebc0,subnet-08f9a240719c15b61,subnet-09367c4a60a4155cb
 spec:
   type: LoadBalancer
   loadBalancerClass: eks.amazonaws.com/nlb
@@ -13,4 +17,3 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 5000
-      nodePort: 30154
